@@ -60,5 +60,9 @@ class WeatherViewController: UIViewController, UITextFieldDelegate, WeatherManag
         print(weather.temperatureString)
     }
     
+    func didFailWithError(_ error: Error) {
+        print(error) // at this stage errors are data related so no user notification.
+    }
+    
 }
 

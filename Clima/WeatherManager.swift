@@ -10,6 +10,7 @@ import Foundation
 
 protocol WeatherManagerDelegate {
     func didUpdateWeather(_ weatherManager: WeatherManager, weather: WeatherModel)
+    func didFailWithError(_ error: Error)
 }
 
 struct WeatherManager {
@@ -32,7 +33,7 @@ struct WeatherManager {
             //3. Give the session a task, give the task a closure
             let task = session.dataTask(with: url) { (data, response, error) in
                 if error != nil {
-                    print(error!)
+                    self.delegate?.didFailWithError(error!)
                     return
                 }
                 if let safeData = data {
@@ -57,7 +58,7 @@ struct WeatherManager {
             return WeatherModel(conditionID: id, cityName: name, temperature: temp)
             
         } catch {
-            print(error)
+            delegate?.didFailWithError(error)
             return nil
         }
     }
