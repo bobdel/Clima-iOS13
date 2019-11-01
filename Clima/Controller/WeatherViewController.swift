@@ -55,7 +55,8 @@ class WeatherViewController: UIViewController, UITextFieldDelegate, WeatherManag
         searchTextField.text = ""
     }
     
-    func didUpdateWeather(weather: WeatherModel) {
+    // note the first item in a delegate method is the name of the object that called the method
+    func didUpdateWeather(_ weatherManager: WeatherManager, weather: WeatherModel) {
         print(weather.temperatureString)
     }
     
