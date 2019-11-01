@@ -6,6 +6,9 @@
 //  Copyright © 2019 App Brewery. All rights reserved.
 //
 
+// this struct is initialized by a JSON object
+// sent from openweathermap.org.
+
 import Foundation
 
 struct WeatherData: Decodable {
@@ -18,7 +21,7 @@ struct WeatherData: Decodable {
     }
 
     struct Weather: Decodable {
-        let description: String
+        let id: Int
     }
 
 }
