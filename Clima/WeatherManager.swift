@@ -14,6 +14,7 @@ struct WeatherManager {
     
     func fetchWeather(cityName: String) {
         let urlString = "\(weatherURL)&q=\(cityName)"
+        print(urlString)
         performRequest(urlString: urlString)
     }
     
@@ -42,6 +43,8 @@ struct WeatherManager {
         do {
             let decodeData = try decoder.decode(WeatherData.self, from: weatherData)
             print(decodeData.name)
+            print(decodeData.main.temp)
+            print(decodeData.weather.description)
         } catch {
             print(error)
         }
