@@ -8,9 +8,15 @@
 
 import Foundation
 
+protocol WeatherManagerDelegate {
+    func didUpdateWeather(weather: WeatherModel)
+}
+
 struct WeatherManager {
     
     let weatherURL = "https://api.openweathermap.org/data/2.5/weather/?appid=ce924c2cad4bdf2f56aadc4912248cf2&units=metric"
+    
+    var delegate: WeatherManagerDelegate?
     
     func fetchWeather(cityName: String) {
         let urlString = "\(weatherURL)&q=\(cityName)"
@@ -18,6 +24,7 @@ struct WeatherManager {
         performRequest(urlString: urlString)
     }
     
+    /// Request data via URLSession and Task
     func performRequest(urlString: String) {
         if let url = URL(string: urlString) { //1. Create a URL
             let session = URLSession(configuration: .default) //2. Create a URLSession
@@ -29,15 +36,17 @@ struct WeatherManager {
                     return
                 }
                 if let safeData = data {
-                    let dataString = String(data: safeData, encoding: .utf8)
-                    self.parseJSON(weatherData: safeData)
+                    if let weather = self.parseJSON(weatherData: safeData) {
+                        self.delegate?.didUpdateWeather(weather: weather) // passes data to WVC via delegate pattern
+                    }
                 }
             }
             task.resume() //4. Start the task
         }
     } // end perform request
     
-    func parseJSON(weatherData: Data) {
+    /// Parse JSON data into a WeatherModel instance
+    func parseJSON(weatherData: Data) -> WeatherModel? {
         let decoder = JSONDecoder()
         do {
             let decodeData = try decoder.decode(WeatherData.self, from: weatherData)
@@ -45,10 +54,14 @@ struct WeatherManager {
             let temp = decodeData.main.temp
             let name = decodeData.name
             
-            let weather = WeatherModel(conditionID: id, cityName: name, temperature: temp)
-            print(weather.temperatureString)
+            return WeatherModel(conditionID: id, cityName: name, temperature: temp)
+            
         } catch {
             print(error)
+            return nil
         }
     }
 }
+
+
+
