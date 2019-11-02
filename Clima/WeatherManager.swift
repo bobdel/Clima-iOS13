@@ -20,7 +20,7 @@ struct WeatherManager {
     let weatherURL = "https://api.openweathermap.org/data/2.5/weather/?appid=ce924c2cad4bdf2f56aadc4912248cf2&units=metric"
     
     var delegate: WeatherManagerDelegate?
-    
+    //FIXME: Repair encoding for multi word cities
     func fetchWeather(cityName: String) {
         let urlString = "\(weatherURL)&q=\(cityName)"
         print(urlString)

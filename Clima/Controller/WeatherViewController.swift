@@ -38,7 +38,10 @@ class WeatherViewController: UIViewController {
         locationManager.requestWhenInUseAuthorization()
         locationManager.requestLocation()
     }
+    
 }
+
+
 
 // MARK: - UITextFieldDelegate
 
@@ -82,6 +85,7 @@ extension WeatherViewController: WeatherManagerDelegate {
         DispatchQueue.main.async {
             self.temperatureLabel.text = weather.temperatureString
             self.conditionImageView.image = UIImage(systemName: weather.conditionName)
+            self.cityLabel.text = weather.cityName
         }
     }
     
@@ -98,6 +102,7 @@ extension WeatherViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         os_log("Success! Location Manager Delegate %@", log: Log.general, type: .debug, #function)
         if let location = locations.last {
+            locationManager.stopUpdatingLocation()
             let lat = location.coordinate.latitude
             let lon = location.coordinate.longitude
             weatherManager.fetchWeather(latitude: lat, longitude: lon)
@@ -108,5 +113,9 @@ extension WeatherViewController: CLLocationManagerDelegate {
         os_log("ERROR! WeatherManager Delegate %@", log: Log.general, type: .debug, #function, error.localizedDescription)
     }
         
-    
+    /// Handle Current Location Button. This also triggers didUpdateLocations method above
+    @IBAction func currentLocationPressed(_ sender: UIButton) {
+        locationManager.requestLocation()
+    }
+
 }
