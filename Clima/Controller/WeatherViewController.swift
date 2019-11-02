@@ -8,8 +8,10 @@
 
 import UIKit
 
-class WeatherViewController: UIViewController, UITextFieldDelegate, WeatherManagerDelegate {
+class WeatherViewController: UIViewController {
     
+    // MARK: - Properties
+
     var delegate: WeatherManagerDelegate?
     
     @IBOutlet weak var conditionImageView: UIImageView!
@@ -19,19 +21,25 @@ class WeatherViewController: UIViewController, UITextFieldDelegate, WeatherManag
     
     var weatherManager = WeatherManager()
     
+    // MARK: - ViewController Lifecycle Methods
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
         searchTextField.delegate = self // set this ViewController as the delegate for the search box
         weatherManager.delegate = self // set this VC to receive weather from JSON
     }
+}
 
+// MARK: - UITextField Delegate
+
+extension WeatherViewController: UITextFieldDelegate {
+    
     /// Handle Search button
     @IBAction func searchPressed(_ sender: UIButton) {
         searchTextField.endEditing(true)
     }
     
-    // MARK: TextField Delegate Methods
     
     /// Handle Go button on keyboard
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -54,8 +62,11 @@ class WeatherViewController: UIViewController, UITextFieldDelegate, WeatherManag
         weatherManager.fetchWeather(cityName: textField.text!)
         searchTextField.text = ""
     }
-    
-    // MARK: WeatherManager Delegate Methods
+}
+
+// MARK: - WeatherManager Delegate
+
+extension WeatherViewController: WeatherManagerDelegate {
 
     // note the first item in a delegate method is the name of the object that called the method
     func didUpdateWeather(_ weatherManager: WeatherManager, weather: WeatherModel) {
@@ -68,6 +79,5 @@ class WeatherViewController: UIViewController, UITextFieldDelegate, WeatherManag
     func didFailWithError(_ error: Error) {
         print(error) // at this stage errors are data related so no user notification.
     }
-    
 }
 
