@@ -17,12 +17,14 @@ protocol WeatherManagerDelegate {
 
 struct WeatherManager {
     
-    let weatherURL = "https://api.openweathermap.org/data/2.5/weather/?appid=ce924c2cad4bdf2f56aadc4912248cf2&units=metric"
+    let weatherURL = "https://api.openweathermap.org/data/2.5/weather/?appid=ce924c2cad4bdf2f56aadc4912248cf2&units=imperial"
     
     var delegate: WeatherManagerDelegate?
-    //FIXME: Repair encoding for multi word cities
+
     func fetchWeather(cityName: String) {
-        let urlString = "\(weatherURL)&q=\(cityName)"
+        let encodedCityName = cityName.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed)
+        let city = encodedCityName ?? cityName
+        let urlString = "\(weatherURL)&q=\(city)"
         print(urlString)
         performRequest(with: urlString)
     }
