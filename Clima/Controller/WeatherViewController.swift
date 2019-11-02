@@ -6,6 +6,7 @@
 //  Copyright © 2019 App Brewery. All rights reserved.
 //
 
+import os.log
 import UIKit
 
 class WeatherViewController: UIViewController {
@@ -77,6 +78,7 @@ extension WeatherViewController: WeatherManagerDelegate {
     }
     
     func didFailWithError(_ error: Error) {
+        os_log("ERROR! WeatherManager Delegate %@", log: Log.general, type: .debug, #function, error.localizedDescription)
         print(error) // at this stage errors are data related so no user notification.
     }
 }

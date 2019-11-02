@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import os.log
 
 protocol WeatherManagerDelegate {
     func didUpdateWeather(_ weatherManager: WeatherManager, weather: WeatherModel)
@@ -55,10 +56,12 @@ struct WeatherManager {
             let temp = decodeData.main.temp
             let name = decodeData.name
             
+            os_log("Success! Data Decoded %@", log: Log.general, type: .debug, #function)
             return WeatherModel(conditionID: id, cityName: name, temperature: temp)
             
         } catch {
             delegate?.didFailWithError(error)
+            os_log("ERROR! Decode Fail %@ %@", log: Log.general, type: .debug, #function, error.localizedDescription)
             return nil
         }
     }
