@@ -6,6 +6,7 @@
 //  Copyright © 2019 App Brewery. All rights reserved.
 //
 
+import CoreLocation
 import Foundation
 import os.log
 
@@ -22,6 +23,12 @@ struct WeatherManager {
     
     func fetchWeather(cityName: String) {
         let urlString = "\(weatherURL)&q=\(cityName)"
+        print(urlString)
+        performRequest(with: urlString)
+    }
+    
+    func fetchWeather(latitude: CLLocationDegrees, longitude: CLLocationDegrees) {
+        let urlString = "\(weatherURL)&lat=\(latitude)&lon=\(longitude)"
         print(urlString)
         performRequest(with: urlString)
     }

@@ -6,6 +6,7 @@
 //  Copyright © 2019 App Brewery. All rights reserved.
 //
 
+import CoreLocation
 import os.log
 import UIKit
 
@@ -22,17 +23,24 @@ class WeatherViewController: UIViewController {
     
     var weatherManager = WeatherManager()
     
-    // MARK: - ViewController Lifecycle Methods
+    var locationManager = CLLocationManager()
+    
+    // MARK: - ViewController Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        // delegate declarations
         searchTextField.delegate = self // set this ViewController as the delegate for the search box
         weatherManager.delegate = self // set this VC to receive weather from JSON
+        locationManager.delegate = self // must be set before the next two methods are called!
+        
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.requestLocation()
     }
 }
 
-// MARK: - UITextField Delegate
+// MARK: - UITextFieldDelegate
 
 extension WeatherViewController: UITextFieldDelegate {
     
@@ -65,7 +73,7 @@ extension WeatherViewController: UITextFieldDelegate {
     }
 }
 
-// MARK: - WeatherManager Delegate
+// MARK: - WeatherManagerDelegate
 
 extension WeatherViewController: WeatherManagerDelegate {
 
@@ -83,3 +91,22 @@ extension WeatherViewController: WeatherManagerDelegate {
     }
 }
 
+// MARK: - CLLocationManagerDelegate
+
+extension WeatherViewController: CLLocationManagerDelegate {
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        os_log("Success! Location Manager Delegate %@", log: Log.general, type: .debug, #function)
+        if let location = locations.last {
+            let lat = location.coordinate.latitude
+            let lon = location.coordinate.longitude
+            weatherManager.fetchWeather(latitude: lat, longitude: lon)
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        os_log("ERROR! WeatherManager Delegate %@", log: Log.general, type: .debug, #function, error.localizedDescription)
+    }
+        
+    
+}
