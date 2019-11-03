@@ -6,14 +6,17 @@
 //  Copyright © 2019 App Brewery. All rights reserved.
 //
 
+import Foundation
 import os.log
 
-struct Log {
+// target as subsystem (helps filter out System messages in console)
+private let subsystem = "com.bobdel.Clima-iOS13"
 
-    // create a log for this app.
-    static var general = OSLog(
-        subsystem: "com.bobdel.Clima-iOS13",
-        category: "general")
+struct Log {
+    
+    // create a logs for this app.
+    static let general = OSLog(subsystem: subsystem, category: "general")
+    static let networking = OSLog(subsystem: subsystem, category: "networking")
 
 }
 
