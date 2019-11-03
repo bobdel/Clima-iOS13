@@ -90,7 +90,7 @@ extension WeatherViewController: WeatherManagerDelegate {
     }
     
     func didFailWithError(_ error: Error) {
-        os_log("ERROR! WeatherManager Delegate %@", log: Log.general, type: .debug, #function, error.localizedDescription)
+        os_log("ERROR! WeatherManager Delegate %@", log: Log.general, type: .error, #function, error.localizedDescription)
         print(error) // at this stage errors are data related so no user notification.
     }
 }
@@ -100,7 +100,7 @@ extension WeatherViewController: WeatherManagerDelegate {
 extension WeatherViewController: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        os_log("Success! Location Manager Delegate %@", log: Log.general, type: .debug, #function)
+        os_log("Success! Location Manager Delegate %@", log: Log.general, type: .info, #function)
         if let location = locations.last {
             locationManager.stopUpdatingLocation()
             let lat = location.coordinate.latitude
@@ -110,7 +110,7 @@ extension WeatherViewController: CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        os_log("ERROR! WeatherManager Delegate %@", log: Log.general, type: .debug, #function, error.localizedDescription)
+        os_log("ERROR! WeatherManager Delegate %@", log: Log.general, type: .error, #function, error.localizedDescription)
     }
         
     /// Handle Current Location Button. This also triggers didUpdateLocations method above

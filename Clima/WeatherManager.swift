@@ -65,12 +65,12 @@ struct WeatherManager {
             let temp = decodeData.main.temp
             let name = decodeData.name
             
-            os_log("Success! Data Decoded %@", log: Log.general, type: .debug, #function)
+            os_log("Success! Data Decoded %@", log: Log.general, type: .info, #function)
             return WeatherModel(conditionID: id, cityName: name, temperature: temp)
             
         } catch {
             delegate?.didFailWithError(error)
-            os_log("ERROR! Decode Fail %@ %@", log: Log.general, type: .debug, #function, error.localizedDescription)
+            os_log("ERROR! Decode Fail %@ %@", log: Log.general, type: .info, #function, error.localizedDescription)
             return nil
         }
     }
