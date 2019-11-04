@@ -20,24 +20,24 @@ struct WeatherManager {
     var delegate: WeatherManagerDelegate?
 
     func fetchWeather(city: String) {
-        let urlString = createQueryURL(queryItems: [
+        let url = createQueryURL(queryItems: [
             URLQueryItem(name: Constants.cityName, value: city)
             ]
         )
-        performRequest(with: urlString)
+        performRequest(with: url)
     }
     
     func fetchWeather(latitude: CLLocationDegrees, longitude: CLLocationDegrees) {
-        let urlString = createQueryURL(queryItems: [
+        let url = createQueryURL(queryItems: [
             URLQueryItem(name: "lat", value: "\(latitude)"),
             URLQueryItem(name: "lon", value: "\(longitude)")
             ]
         )
-        performRequest(with: urlString)
+        performRequest(with: url)
     }
         
     /// Create a URL
-    func createQueryURL(queryItems: [URLQueryItem]) -> String {
+    func createQueryURL(queryItems: [URLQueryItem]) -> URL? {
         
         var components = URLComponents()
         
@@ -52,12 +52,12 @@ struct WeatherManager {
         
         components.queryItems = baseItems + queryItems
     
-        return components.url!.absoluteString
+        return components.url
     }
 
     /// Request data via URLSession and Task
-    func performRequest(with urlString: String) {
-        if let url = URL(string: urlString) { //1. Create a URL
+    func performRequest(with url: URL?) {
+        if let url = url { //1. unwrap URL
             let session = URLSession(configuration: .default) //2. Create a URLSession
             
             //3. Give the session a task, give the task a closure
@@ -85,12 +85,12 @@ struct WeatherManager {
             let temp = decodeData.main.temp
             let name = decodeData.name
             
-            os_log("Success! Data Decoded %@", log: Log.general, type: .info, #function)
+            os_log("Success! decode %@", log: Log.general, type: .info, #function)
             return WeatherModel(conditionID: id, cityName: name, temperature: temp)
             
         } catch {
             delegate?.didFailWithError(error)
-            os_log("ERROR! Decode Fail %@ %@", log: Log.general, type: .info, #function, error.localizedDescription)
+            os_log("ERROR! decode %@ %@", log: Log.general, type: .error, #function, error.localizedDescription)
             return nil
         }
     }
