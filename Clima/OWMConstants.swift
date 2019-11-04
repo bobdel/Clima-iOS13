@@ -20,5 +20,10 @@ extension WeatherManager {
         static let apiHost = "api.openweathermap.org"
         static let apiPath = "/data/2.5/weather/"
         static let apiUnits = "imperial"
+        
+        // MARK: API Parameter Names
+        static let apiKeyName = "appid"
+        static let apiUnitsName = "units"
+        static let cityName = "q"
     }
 }

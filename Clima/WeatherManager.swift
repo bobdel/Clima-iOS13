@@ -17,27 +17,27 @@ protocol WeatherManagerDelegate {
 
 struct WeatherManager {
     
-    let qItemAPIKey = URLQueryItem(name: "appid", value: Constants.apiKey)
-    let qItemUnits = URLQueryItem(name: "units", value: Constants.apiUnits)
-
     var delegate: WeatherManagerDelegate?
 
     func fetchWeather(city: String) {
-        let urlString = createURL(city)
-        print(urlString)
+        let urlString = createQueryURL(queryItems: [
+            URLQueryItem(name: Constants.cityName, value: city)
+            ]
+        )
         performRequest(with: urlString)
     }
     
     func fetchWeather(latitude: CLLocationDegrees, longitude: CLLocationDegrees) {
-        let weatherURL = "https://api.openweathermap.org/data/2.5/weather/?appid=ce924c2cad4bdf2f56aadc4912248cf2&units=imperial"
-
-        let urlString = "\(weatherURL)&lat=\(latitude)&lon=\(longitude)"
-        print(urlString)
+        let urlString = createQueryURL(queryItems: [
+            URLQueryItem(name: "lat", value: "\(latitude)"),
+            URLQueryItem(name: "lon", value: "\(longitude)")
+            ]
+        )
         performRequest(with: urlString)
     }
-    
-    /// Create a query URL for given city
-    func createURL(_ city: String) -> String {
+        
+    /// Create a URL
+    func createQueryURL(queryItems: [URLQueryItem]) -> String {
         
         var components = URLComponents()
         
@@ -45,12 +45,16 @@ struct WeatherManager {
         components.host = Constants.apiHost
         components.path = Constants.apiPath
         
-        let qItemCity = URLQueryItem(name: "q", value: city)
-
-        components.queryItems = [qItemAPIKey, qItemUnits, qItemCity]
+        let baseItems = [
+            URLQueryItem(name: Constants.apiKeyName, value: Constants.apiKey),
+            URLQueryItem(name: Constants.apiUnitsName, value: Constants.apiUnits)
+            ]
+        
+        components.queryItems = baseItems + queryItems
+    
         return components.url!.absoluteString
     }
-    
+
     /// Request data via URLSession and Task
     func performRequest(with urlString: String) {
         if let url = URL(string: urlString) { //1. Create a URL
