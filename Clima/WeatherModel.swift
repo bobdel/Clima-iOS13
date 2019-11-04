@@ -3,7 +3,7 @@
 //  Clima
 //
 //  Created by Robert DeLaurentis on 11/1/19.
-//  Copyright © 2019 App Brewery. All rights reserved.
+//  Copyright © 2019 Robert DeLaurentis. All rights reserved.
 //
 
 // this item models the weather data 

@@ -3,7 +3,7 @@
 //  Clima
 //
 //  Created by Robert DeLaurentis on 10/31/19.
-//  Copyright © 2019 App Brewery. All rights reserved.
+//  Copyright © 2019 Robert DeLaurentis. All rights reserved.
 //
 
 import CoreLocation
@@ -17,22 +17,38 @@ protocol WeatherManagerDelegate {
 
 struct WeatherManager {
     
-    let weatherURL = "https://api.openweathermap.org/data/2.5/weather/?appid=ce924c2cad4bdf2f56aadc4912248cf2&units=imperial"
-    
+    let qItemAPIKey = URLQueryItem(name: "appid", value: Constants.apiKey)
+    let qItemUnits = URLQueryItem(name: "units", value: Constants.apiUnits)
+
     var delegate: WeatherManagerDelegate?
 
-    func fetchWeather(cityName: String) {
-        let encodedCityName = cityName.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed)
-        let city = encodedCityName ?? cityName
-        let urlString = "\(weatherURL)&q=\(city)"
+    func fetchWeather(city: String) {
+        let urlString = createURL(city)
         print(urlString)
         performRequest(with: urlString)
     }
     
     func fetchWeather(latitude: CLLocationDegrees, longitude: CLLocationDegrees) {
+        let weatherURL = "https://api.openweathermap.org/data/2.5/weather/?appid=ce924c2cad4bdf2f56aadc4912248cf2&units=imperial"
+
         let urlString = "\(weatherURL)&lat=\(latitude)&lon=\(longitude)"
         print(urlString)
         performRequest(with: urlString)
+    }
+    
+    /// Create a query URL for given city
+    func createURL(_ city: String) -> String {
+        
+        var components = URLComponents()
+        
+        components.scheme = Constants.apiScheme
+        components.host = Constants.apiHost
+        components.path = Constants.apiPath
+        
+        let qItemCity = URLQueryItem(name: "q", value: city)
+
+        components.queryItems = [qItemAPIKey, qItemUnits, qItemCity]
+        return components.url!.absoluteString
     }
     
     /// Request data via URLSession and Task
