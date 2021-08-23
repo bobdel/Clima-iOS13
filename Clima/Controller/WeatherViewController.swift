@@ -12,7 +12,7 @@ import UIKit
 
 class WeatherViewController: UIViewController {
     
-    // MARK: - Properties
+    // MARK: - Properties Section
 
     var delegate: WeatherManagerDelegate?
     
